@@ -14,14 +14,29 @@ Data were sequenced at the Translational Genomics Research Institute on an Illum
 
 Custom annotation combining GENCODE 29 and lncipedia 5.2. More details are available in the [corresponding GitHub repo](https://github.com/FOUNDINPD/annotation-RNA).
 
-### cutadapt (v2.7) parameters
+### packages and versions used
+```
+  perl: "perl/5.26.2"
+  samtools: "samtools/1.9"
+  bwa: "bwa/0.7.17"
+  ciri: "ciri/2.0.6"
+  R: "R/3.4.1"
+  rseqc: "RSeQC/2.6.4"
+  python2: "python/2.7.13"
+  star: "STAR/2.6.1d"
+  fastqc: "fastqc/0.11.8"
+  featureCounts: "subread/1.6.4"
+  multiqc: "multiqc/1.8"
+```
+
+### cutadapt (v2.7)
 [cutadapt documentation](https://cutadapt.readthedocs.io/en/stable/)
 
 ```
 cutadapt -u 3 -o ${sampleID}.R1.fastq.gz -p ${sampleID}.R2.fastq.gz ${input_dir}/*${sampleID}*R1*.fastq.gz ${input_dir}/*${sampleID}*R2*.fastq.gz
 ```
 
-### STAR (v2.6.1d) parameters
+### STAR (v2.6.1d)
 [STAR documentation](https://github.com/alexdobin/STAR)
 ```
     STAR \
@@ -55,7 +70,7 @@ cutadapt -u 3 -o ${sampleID}.R1.fastq.gz -p ${sampleID}.R2.fastq.gz ${input_dir}
     --genomeLoad NoSharedMemory
 ```
 
-### salmon (v1.2.1) parameters
+### salmon (v1.2.1)
 [salmon docs](https://combine-lab.github.io/salmon/)
 ```
     salmon quant \
@@ -71,4 +86,29 @@ cutadapt -u 3 -o ${sampleID}.R1.fastq.gz -p ${sampleID}.R2.fastq.gz ${input_dir}
       --mates1 {{ fastq_sets | map(attribute='fq1') | join(' ') }} \
       --mates2 {{ fastq_sets | map(attribute='fq2') | join(' ') }} \
       --geneMap {{ config.file_locations.annotation }}
+```
+
+### featureCounts (v1.6.4)
+[subread/featureCounts docs](http://subread.sourceforge.net/)
+
+```
+    featureCounts -p -T ${SLURM_CPUS_PER_TASK} -t exon -g gene_id -a {{ config.file_locations.annotation }} -s 1 -o {{ sample }}.txt {{ config.workdir }}/aligned/{{ sample }}/{{ sample }}.Aligned.out.bam
+```
+
+### samtools (v1.9) 
+[subread/featureCounts docs](http://subread.sourceforge.net/)
+
+```
+    samtools sort -@ ${SLURM_CPUS_PER_TASK} -m 4G -O bam -o {{ config.workdir }}/aligned/{{ sample }}/{{ sample }}.Aligned.out.sorted.bam {{ config.workdir }}/aligned/{{ sample }}/{{ sample }}.Aligned.out.bam
+    samtools index {{ config.workdir }}/aligned/{{ sample }}/{{ sample }}.Aligned.out.sorted.bam
+
+```
+
+### CIRI2 (v2.0.6)
+[CIRI docs](https://sourceforge.net/projects/ciri/files/CIRI2/)
+
+```
+    bwa mem -t ${SLURM_CPUS_PER_TASK} -T 19 {{ config.file_locations.bwaIndex }} <(zcat {{ fastq_sets | map(attribute='fq1') | join(' ') }}) <(zcat {{ fastq_sets | map(attribute='fq2') | join(' ') }}) > {{ sample }}.sam
+
+    perl ciri2.pl -I {{ sample }}.sam -O {{ sample }}.ciri -F {{ config.file_locations.genome }} -A {{ config.file_locations.annotation }} -T ${SLURM_CPUS_PER_TASK}
 ```
