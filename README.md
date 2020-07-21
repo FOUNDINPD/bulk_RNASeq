@@ -51,7 +51,7 @@ cutadapt -u 3 -o ${sampleID}.R1.fastq.gz -p ${sampleID}.R2.fastq.gz ${input_dir}
     --genomeLoad NoSharedMemory
 ```
 
-### salmon (1.2.1) parameters
+### salmon (v1.2.1) parameters
 [salmon docs](https://combine-lab.github.io/salmon/)
 ```
     salmon quant \
