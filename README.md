@@ -96,12 +96,12 @@ cutadapt -u 3 -o ${sampleID}.R1.fastq.gz -p ${sampleID}.R2.fastq.gz ${input_dir}
 ```
 
 ### samtools (v1.9) 
-[subread/featureCounts docs](http://subread.sourceforge.net/)
+[samtools docs](http://www.htslib.org/)
 
 ```
     samtools sort -@ ${SLURM_CPUS_PER_TASK} -m 4G -O bam -o {{ config.workdir }}/aligned/{{ sample }}/{{ sample }}.Aligned.out.sorted.bam {{ config.workdir }}/aligned/{{ sample }}/{{ sample }}.Aligned.out.bam
+    
     samtools index {{ config.workdir }}/aligned/{{ sample }}/{{ sample }}.Aligned.out.sorted.bam
-
 ```
 
 ### CIRI2 (v2.0.6)
