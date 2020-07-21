@@ -10,6 +10,10 @@ IMPORTANT: The first three nucleotides of the first sequencing read (Read 1) are
 
 Data were sequenced at the Translational Genomics Research Institute on an Illumina NovaSeq6000.
 
+### transcriptome annotation
+
+Custom annotation combining GENCODE 29 and lncipedia 5.2. More details are available in the [corresponding GitHub repo](https://github.com/FOUNDINPD/annotation-RNA).
+
 ### cutadapt (v2.7) parameters
 [cutadapt documentation](https://cutadapt.readthedocs.io/en/stable/)
 
