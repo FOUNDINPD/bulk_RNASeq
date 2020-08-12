@@ -112,3 +112,17 @@ cutadapt -u 3 -o ${sampleID}.R1.fastq.gz -p ${sampleID}.R2.fastq.gz ${input_dir}
 
     perl ciri2.pl -I {{ sample }}.sam -O {{ sample }}.ciri -F {{ config.file_locations.genome }} -A {{ config.file_locations.annotation }} -T ${SLURM_CPUS_PER_TASK}
 ```
+
+
+## aggregated count tables provided
+### gene level
+* countTable.tsv = raw counts output from featureCounts
+* vstTable.tsv = [variance stabilizing transformation (DESeq2)](https://rdrr.io/bioc/DESeq2/man/varianceStabilizingTransformation.html)
+* normCountTable.tsv = normalized counts (library size normalized with DESeq2)
+* cpmTable.tsv = [counts per million (edgeR)](https://rdrr.io/bioc/edgeR/man/cpm.html)
+
+### transcript level (salmon)
+* tpmTable.tsv
+
+### circular RNA
+* circRNACountTable.tsv = output from CIRI2
